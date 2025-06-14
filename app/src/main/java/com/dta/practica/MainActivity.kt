@@ -11,6 +11,15 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.dta.practica.ui.navigation.Screen
+import com.dta.practica.ui.screens.CatalogScreen
+import com.dta.practica.ui.screens.CurrencyConverterScreen
+import com.dta.practica.ui.screens.DogAgeCalculatorScreen
+import com.dta.practica.ui.screens.MenuScreen
+import com.dta.practica.ui.screens.PersonCrudScreen
 import com.dta.practica.ui.theme.PracticaTheme
 
 // Import de Firebase Analytics
@@ -30,11 +39,30 @@ class MainActivity : ComponentActivity() {
         firebaseAnalytics.logEvent("app_opened", null)
         setContent {
             PracticaTheme {
+                val navController = rememberNavController()
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
+                    NavHost(
+                        navController = navController,
+                        startDestination = Screen.Menu.route,
                         modifier = Modifier.padding(innerPadding)
-                    )
+                    ) {
+                        composable(Screen.Menu.route) {
+                            MenuScreen(onNavigate = { navController.navigate(it) })
+                        }
+                        composable(Screen.AgeCalc.route) {
+                            DogAgeCalculatorScreen(onBack = { navController.popBackStack() })
+                        }
+                        composable(Screen.Currency.route) {
+                            CurrencyConverterScreen(onBack = { navController.popBackStack() })
+                        }
+                        composable(Screen.Catalog.route) {
+                            CatalogScreen(onBack = { navController.popBackStack() })
+                        }
+                        composable(Screen.PersonCrud.route) {
+                            PersonCrudScreen(onBack = { navController.popBackStack() })
+                        }
+
+                    }
                 }
             }
         }
